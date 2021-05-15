@@ -1,10 +1,9 @@
 from tkinter import *
-
+import json 
 root=Tk()
 
 root.title('MoneyManager')
 root.geometry("800x600")
-
 
 class EmFund():
     def addMoneyEmFund():
@@ -22,6 +21,8 @@ class EmFund():
             formerAmount = int(emFundBox.get())
             emFundBox.delete(0,END)
             emFundBox.insert(0,currAmount+formerAmount)
+            saveData()
+
         else:
             errorScreen = Toplevel()
             errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')
@@ -46,6 +47,7 @@ class EmFund():
             if(len(amount)>=0 and moneyToWithdraw<=currentEmFundMoney):
                 emFundBox.delete(0,END)
                 emFundBox.insert(0,currentEmFundMoney-moneyToWithdraw)
+                saveData()
             else:
                 errorScreen = Toplevel()
                 errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')
@@ -67,6 +69,8 @@ class MiscFund():
             formerAmount = int(thingsInputBox.get())
             thingsInputBox.delete(0,END)
             thingsInputBox.insert(0,currAmount+formerAmount)
+            saveData()
+
         else:
             errorScreen = Toplevel()
             errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')
@@ -91,6 +95,8 @@ class MiscFund():
         if(len(amount)>=0 and moneyToWithdraw<=currentThingsFundMoney):
             thingsInputBox.delete(0,END)
             thingsInputBox.insert(0,currentThingsFundMoney-moneyToWithdraw)
+            saveData()
+
         else:
             errorScreen = Toplevel()
             errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')
@@ -133,4 +139,18 @@ depositThingsButton.grid(row=3, column=1)
 #DELETE FUND BUTTON
 
 #SHOW HISTORY OF WITHDRAWALS AND INSERTIONS 
+
+def saveData():
+    data={
+     'EmFund': emFundBox.get(),
+     'MiscFund': thingsInputBox.get()
+    }
+    data_file = open('fundsData.json','w')
+    json.dump(data, data_file, indent=6)
+
+def readData():
+    data_file=open('fundsData.json')
+    
+readData()
+
 root.mainloop()
