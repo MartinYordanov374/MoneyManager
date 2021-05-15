@@ -7,16 +7,22 @@ root.geometry("800x600")
 def addMoneyEmFund():
     addScreen = Toplevel()
     addScreen.geometry("450x500")
-    addMoneyPromptMessage = Label(addScreen,text='How much money would you like to add to your Emergency Fund?').grid(row=0, column=0)
+    addMoneyPromptMessage = Label(addScreen,text='How much money would you like to add to your Emergency Fund?')
+    addMoneyPromptMessage.grid(row=0, column=0)
     addMoneyField= Entry(addScreen)
     addMoneyField.grid(row=1, column=0, ipadx=130)
     finishAddingButton = Button(addScreen, text='Add money to your emergency fund',width=50, command=lambda: confirmAddingEmFundMoney(addMoneyField.get())).grid(row=2,column=0)
-
+    
 def confirmAddingEmFundMoney(amount):
-    currAmount = amount
-    formerAmount = emFundBox.get()
-    emFundBox.delete(0,END)
-    emFundBox.insert(0,float(int(currAmount))+float(int(formerAmount)))
+    if(len(amount)>0):
+        currAmount = int(amount)
+        formerAmount = int(emFundBox.get())
+        emFundBox.delete(0,END)
+        emFundBox.insert(0,currAmount+formerAmount)
+    else:
+        errorScreen = Toplevel()
+        errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')
+        errorMessage.pack()
 #BUTTON LABEL - EMERGENCY FUND
 
 emergencyFundLabel = Label(root, text='Emergency Fund:').grid(row=0, column=0)
@@ -25,6 +31,7 @@ emergencyFundLabel = Label(root, text='Emergency Fund:').grid(row=0, column=0)
 
 emFundBox = Entry(root, state='normal')
 emFundBox.grid(row=0, column=1)
+emFundBox.insert(0,0)
 
 #WITHDRAW FROM EMERGENCY FUND -> OPEN A NEW SCREEN ASKING HOW MUCH TO WITHDRAW
 
