@@ -8,6 +8,7 @@ root.geometry("800x600")
 class EmFund():
     def addMoneyEmFund():
         addScreen = Toplevel()
+        addScreen.title('Deposit Money - Emergency Fund')
         addScreen.geometry("460x500")
         addMoneyPromptMessage = Label(addScreen,text='How much money would you like to deposit to your Emergency Fund?')
         addMoneyPromptMessage.grid(row=0, column=0)
@@ -30,6 +31,7 @@ class EmFund():
 
     def withdrawMoneyEmFund():
         withdrawScreen = Toplevel()
+        withdrawScreen.title('Withdraw Money - Emergency Fund')
         withdrawScreen.geometry('460x500')
         #ask message -> How muhc would you like to withdraw?
         withdrawPromptMessage = Label(withdrawScreen,text='How much money would you like to withdraw?')
@@ -56,6 +58,7 @@ class EmFund():
 class MiscFund():
     def addMoneyMiscFund():
         addScreen = Toplevel()
+        addScreen.title('Deposit Money - Miscellanious Fund')
         addScreen.geometry("475x500")
         addMoneyPromptMessage = Label(addScreen,text='How much money would you like to deposit to your Miscellanious Fund?')
         addMoneyPromptMessage.grid(row=0, column=0)
@@ -78,6 +81,7 @@ class MiscFund():
 
     def withdrawMoneyMiscFund():
         withdrawScreen = Toplevel()
+        withdrawScreen.title('Withdraw Money - Miscellanious Fund')
         withdrawScreen.geometry('475x500')
         #ask message -> How muhc would you like to withdraw?
         withdrawPromptMessage = Label(withdrawScreen,text='How much money would you like to withdraw?')
@@ -102,9 +106,16 @@ class MiscFund():
             errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')
             errorMessage.pack()
 
+class history():
+    def showHistory():
+        historyScreen=Toplevel()
+        historyScreen.title('Withdraw/Deposit history')
+        historyScreen.geometry('500x500')
 emergencyFundLabel = Label(root, text='Emergency Fund:').grid(row=0, column=0)
 
 #TEXTBOX - EMERGENCY FUND
+
+#save data to the JSON file 
 def saveData():
     data={
      'EmFund': emFundBox.get(),
@@ -113,6 +124,7 @@ def saveData():
     data_file = open('fundsData.json','w')
     json.dump(data, data_file, indent=6)
 
+#read data from the JSON file 
 def readData():
     savedMoney=[]
     data_file=open('fundsData.json')
@@ -123,6 +135,7 @@ def readData():
     global savedEmFundMoney, savedMiscMoney
     savedEmFundMoney = savedMoney[0]
     savedMiscMoney = savedMoney[1]
+
 
 readData()
 
@@ -158,7 +171,11 @@ depositThingsButton.grid(row=3, column=1)
 #CREATE NEW FUND BUTTON
 #DELETE FUND BUTTON
 
-#SHOW HISTORY OF WITHDRAWALS AND INSERTIONS 
+#SHOW HISTORY OF WITHDRAWALS AND DEPOSITS 
+showHistoryButton = Button(root, text='show withdraw/deposit history', command=history.showHistory)
+emptyLabel = Label(root, text='     ').grid(row=2, column=3)
+
+showHistoryButton.grid(row=2, column=4)
 
 
 
