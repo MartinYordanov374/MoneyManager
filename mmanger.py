@@ -105,10 +105,30 @@ class MiscFund():
 emergencyFundLabel = Label(root, text='Emergency Fund:').grid(row=0, column=0)
 
 #TEXTBOX - EMERGENCY FUND
+def saveData():
+    data={
+     'EmFund': emFundBox.get(),
+     'MiscFund': thingsInputBox.get()
+    }
+    data_file = open('fundsData.json','w')
+    json.dump(data, data_file, indent=6)
+
+def readData():
+    savedMoney=[]
+    data_file=open('fundsData.json')
+    loaded_data = json.load(data_file)
+    pairs = loaded_data.items()
+    for key,value in pairs:
+        savedMoney.append(value)
+    global savedEmFundMoney, savedMiscMoney
+    savedEmFundMoney = savedMoney[0]
+    savedMiscMoney = savedMoney[1]
+
+readData()
 
 emFundBox = Entry(root, state='normal')
 emFundBox.grid(row=0, column=1)
-emFundBox.insert(0,0)
+emFundBox.insert(0,savedEmFundMoney)
 
 #WITHDRAW FROM EMERGENCY FUND -> OPEN A NEW SCREEN ASKING HOW MUCH TO WITHDRAW
 
@@ -124,7 +144,7 @@ thingsLabel.grid(row=2, column=0)
 #TEXTBOX - THINGS FUND
 thingsInputBox = Entry(root)
 thingsInputBox.grid(row=2, column=1)
-thingsInputBox.insert(0,0)
+thingsInputBox.insert(0,savedMiscMoney)
 #WITHDRAW FROM THINGS FUNDS -> OPEN A NEW SCREEN ASKING HOW MUCH TO WITHDRAW
 withdrawThingsButton = Button(root, text='Withdraw Money', command=MiscFund.withdrawMoneyMiscFund)
 withdrawThingsButton.grid(row=3, column=0)
@@ -140,17 +160,6 @@ depositThingsButton.grid(row=3, column=1)
 
 #SHOW HISTORY OF WITHDRAWALS AND INSERTIONS 
 
-def saveData():
-    data={
-     'EmFund': emFundBox.get(),
-     'MiscFund': thingsInputBox.get()
-    }
-    data_file = open('fundsData.json','w')
-    json.dump(data, data_file, indent=6)
 
-def readData():
-    data_file=open('fundsData.json')
-    
-readData()
 
 root.mainloop()
