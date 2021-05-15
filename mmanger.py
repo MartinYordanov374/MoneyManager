@@ -41,9 +41,51 @@ def withdrawMoneyEmFund():
 def confirmWithdrawEmFundMoney(amount):
     currentEmFundMoney = int(emFundBox.get())
     moneyToWithdraw = int(amount)
-    if(len(amount)>0 and moneyToWithdraw<=currentEmFundMoney):
+    if(len(amount)>=0 and moneyToWithdraw<=currentEmFundMoney):
          emFundBox.delete(0,END)
          emFundBox.insert(0,currentEmFundMoney-moneyToWithdraw)
+    else:
+        errorScreen = Toplevel()
+        errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')
+        errorMessage.pack()
+    
+def addMoneyMiscFund():
+    addScreen = Toplevel()
+    addScreen.geometry("475x500")
+    addMoneyPromptMessage = Label(addScreen,text='How much money would you like to deposit to your Miscellanious Fund?')
+    addMoneyPromptMessage.grid(row=0, column=0)
+    addMoneyField= Entry(addScreen)
+    addMoneyField.grid(row=1, column=0, ipadx=130)
+    finishAddingButton = Button(addScreen, text='Deposit money to your Miscellanious fund',width=50, command=lambda: confirmAddingMiscFundMoney(addMoneyField.get())).grid(row=2,column=0)
+    
+def confirmAddingMiscFundMoney(amount):
+    if(len(amount)>0):
+        currAmount = int(amount)
+        formerAmount = int(thingsInputBox.get())
+        thingsInputBox.delete(0,END)
+        thingsInputBox.insert(0,currAmount+formerAmount)
+    else:
+        errorScreen = Toplevel()
+        errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')
+        errorMessage.pack()
+def withdrawMoneyMiscFund():
+    withdrawScreen = Toplevel()
+    withdrawScreen.geometry('475x500')
+    #ask message -> How muhc would you like to withdraw?
+    withdrawPromptMessage = Label(withdrawScreen,text='How much money would you like to withdraw?')
+    withdrawPromptMessage.grid(row=0, column=0)
+    #input field
+    withdrawInputField = Entry(withdrawScreen)
+    withdrawInputField.grid(row=1, column =0, ipadx=130)
+    #withdraw input button -> How much would you like to withdraw?
+    withdrawButton = Button(withdrawScreen,text='Withdraw money from your Miscellanious fund', width=50, command=lambda:confirmWithdrawMiscFundMoney(withdrawInputField.get()))
+    withdrawButton.grid(row=2, column=0)
+def confirmWithdrawMiscFundMoney(amount):
+    currentThingsFundMoney = int(thingsInputBox.get())
+    moneyToWithdraw = int(amount)
+    if(len(amount)>=0 and moneyToWithdraw<=currentThingsFundMoney):
+         thingsInputBox.delete(0,END)
+         thingsInputBox.insert(0,currentThingsFundMoney-moneyToWithdraw)
     else:
         errorScreen = Toplevel()
         errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')
@@ -64,15 +106,22 @@ emFundWithdrawButton = Button(root, text='Withdraw money', command=withdrawMoney
 
 emFundAddButton = Button(root, text='Deposit money', command=addMoneyEmFund).grid(row=1, column=1)
 
-
-
-
-
-
 #BUTTON LABEL - THINGS
+thingsLabel = Label(root, text='Miscellanious Fund: ')
+thingsLabel.grid(row=2, column=0)
 #TEXTBOX - THINGS FUND
+thingsInputBox = Entry(root)
+thingsInputBox.grid(row=2, column=1)
+thingsInputBox.insert(0,0)
 #WITHDRAW FROM THINGS FUNDS -> OPEN A NEW SCREEN ASKING HOW MUCH TO WITHDRAW
+withdrawThingsButton = Button(root, text='Withdraw Money', command=withdrawMoneyMiscFund)
+withdrawThingsButton.grid(row=3, column=0)
+
 #ADD TO THINGS FUND -> OPEN A NEW SCREEN ASKING HOW MUCH TO ADD
+depositThingsButton = Button(root, text='Deposit Money', command=addMoneyMiscFund)
+
+depositThingsButton.grid(row=3, column=1)
+
 
 #CREATE NEW FUND BUTTON
 #DELETE FUND BUTTON
