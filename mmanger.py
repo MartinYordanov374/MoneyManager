@@ -144,54 +144,53 @@ class MiscFund():
 emergencyFundLabel = Label(root, text='Emergency Fund:').grid(row=0, column=0)
 
 #TEXTBOX - EMERGENCY FUND
-
-#save data to the JSON file 
-def saveData():
-    data={
-     'EmFund': emFundBox.get(),
-     'MiscFund': thingsInputBox.get()
-    }
-    data_file = open('fundsData.json','w')
-    json.dump(data, data_file, indent=6)
-
-#read data from the JSON file 
-def readData():
-    savedMoney=[]
-    data_file=open('fundsData.json')
-    loaded_data = json.load(data_file)
-    pairs = loaded_data.items()
-    for key,value in pairs:
-        savedMoney.append(value)
-    global savedEmFundMoney, savedMiscMoney
-    savedEmFundMoney = savedMoney[0]
-    savedMiscMoney = savedMoney[1]
-
-
-def readTransactionHistory():
-    transactionHistoryScreen = Toplevel()
-    transactionHistoryScreen.geometry('460x550')
-    transactionHistoryTextBox = Listbox(transactionHistoryScreen, width=100, height=100)
-    transactionHistoryTextBox.pack()
+class DataOperations():
+    def saveData():
+        data={
+        'EmFund': emFundBox.get(),
+        'MiscFund': thingsInputBox.get()
+        }
+        data_file = open('fundsData.json','w')
+        json.dump(data, data_file, indent=6)
     
-    queryCursor = mydb.cursor()
-    sqlCommand ='SELECT type,amount FROM TransactionHistory'
-    queryCursor.execute(sqlCommand)
-    result = queryCursor.fetchall()
-    mydb.commit()
-    for i in result:
-        transactionHistoryTextBox.insert(END,"--", i)
-    # historyData_file = open('historyData.json')
-    # loadedHistoryData = json.load(historyData_file)
-    # historyDataPairs = loadedHistoryData.items()
-    # global historyActionType, historyAmount
-    # for key, value in historyDataPairs:
-    #     historyActionType=key
-    #     historyAmount=value
+    def readData():
+        savedMoney=[]
+        data_file=open('fundsData.json')
+        loaded_data = json.load(data_file)
+        pairs = loaded_data.items()
+        for key,value in pairs:
+            savedMoney.append(value)
+        global savedEmFundMoney, savedMiscMoney
+        savedEmFundMoney = savedMoney[0]
+        savedMiscMoney = savedMoney[1]
+    def readTransactionHistory():
+        transactionHistoryScreen = Toplevel()
+        transactionHistoryScreen.geometry('460x550')
+        transactionHistoryTextBox = Listbox(transactionHistoryScreen, width=100, height=100)
+        transactionHistoryTextBox.pack()
+        
+        queryCursor = mydb.cursor()
+        sqlCommand ='SELECT type,amount FROM TransactionHistory'
+        queryCursor.execute(sqlCommand)
+        result = queryCursor.fetchall()
+        mydb.commit()
+        for i in result:
+            transactionHistoryTextBox.insert(END,"--", i)
+        # historyData_file = open('historyData.json')
+        # loadedHistoryData = json.load(historyData_file)
+        # historyDataPairs = loadedHistoryData.items()
+        # global historyActionType, historyAmount
+        # for key, value in historyDataPairs:
+        #     historyActionType=key
+        #     historyAmount=value
 
-    
-    # transactionHistoryTextBox.insert(0,historyActionType)
+        
+        # transactionHistoryTextBox.insert(0,historyActionType)
 
-readData()
+
+
+
+DataOperations.readData()
 
 emFundBox = Entry(root, state='normal')
 emFundBox.grid(row=0, column=1)
@@ -222,15 +221,18 @@ depositThingsButton = Button(root, text='Deposit Money', command=MiscFund.addMon
 depositThingsButton.grid(row=3, column=1)
 
 
-#CREATE NEW FUND BUTTON
-#DELETE FUND BUTTON
 
 #SHOW HISTORY OF WITHDRAWALS AND DEPOSITS 
-showHistoryButton = Button(root, text='show withdraw/deposit history', command=readTransactionHistory)
+showHistoryButton = Button(root, text='show withdraw/deposit history', command=DataOperations.readTransactionHistory)
 emptyLabel = Label(root, text='     ').grid(row=2, column=3)
 
 showHistoryButton.grid(row=2, column=4)
 
+
+#CREATE NEW FUND BUTTON
+createFundButton = Button(text='Create a new fund')
+createFundButton.grid(row=2, column=5)
+#DELETE FUND BUTTON
 
 
 root.mainloop()
