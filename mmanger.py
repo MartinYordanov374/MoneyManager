@@ -3,6 +3,8 @@ import json
 import mysql.connector
 from dotenv import load_dotenv
 import os
+
+#Creating the window
 root=Tk()
 
 root.title('MoneyManager')
@@ -140,10 +142,6 @@ class MiscFund():
             errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')
             errorMessage.pack()
 
-
-emergencyFundLabel = Label(root, text='Emergency Fund:').grid(row=0, column=0)
-
-#TEXTBOX - EMERGENCY FUND
 class DataOperations():
     def saveData():
         data={
@@ -187,52 +185,69 @@ class DataOperations():
         
         # transactionHistoryTextBox.insert(0,historyActionType)
 
-
-
-
 DataOperations.readData()
 
-emFundBox = Entry(root, state='normal')
-emFundBox.grid(row=0, column=1)
-emFundBox.insert(0,savedEmFundMoney)
+class GUI():
+    def emFundGUI():
+        emergencyFundLabel = Label(root, text='Emergency Fund:').grid(row=0, column=0)
 
-#WITHDRAW FROM EMERGENCY FUND -> OPEN A NEW SCREEN ASKING HOW MUCH TO WITHDRAW
+        #TEXTBOX - EMERGENCY FUND
+        emFundBox = Entry(root, state='normal')
+        emFundBox.grid(row=0, column=1)
+        emFundBox.insert(0,savedEmFundMoney)
 
-emFundWithdrawButton = Button(root, text='Withdraw money', command=EmFund.withdrawMoneyEmFund).grid(row=1, column=0)
+        #WITHDRAW FROM EMERGENCY FUND -> OPEN A NEW SCREEN ASKING HOW MUCH TO WITHDRAW
 
-#ADD TO EMERGENCY FUND -> OPEN A NEW SCREEN ASKING HOW MUCH TO ADD
+        emFundWithdrawButton = Button(root, text='Withdraw money', command=EmFund.withdrawMoneyEmFund).grid(row=1, column=0)
 
-emFundAddButton = Button(root, text='Deposit money', command=EmFund.addMoneyEmFund).grid(row=1, column=1)
+        #ADD TO EMERGENCY FUND -> OPEN A NEW SCREEN ASKING HOW MUCH TO ADD
 
-#BUTTON LABEL - THINGS
-thingsLabel = Label(root, text='Miscellanious Fund: ')
-thingsLabel.grid(row=2, column=0)
-#TEXTBOX - THINGS FUND
-thingsInputBox = Entry(root)
-thingsInputBox.grid(row=2, column=1)
-thingsInputBox.insert(0,savedMiscMoney)
-#WITHDRAW FROM THINGS FUNDS -> OPEN A NEW SCREEN ASKING HOW MUCH TO WITHDRAW
-withdrawThingsButton = Button(root, text='Withdraw Money', command=MiscFund.withdrawMoneyMiscFund)
-withdrawThingsButton.grid(row=3, column=0)
+        emFundAddButton = Button(root, text='Deposit money', command=EmFund.addMoneyEmFund).grid(row=1, column=1)
 
-#ADD TO THINGS FUND -> OPEN A NEW SCREEN ASKING HOW MUCH TO ADD
-depositThingsButton = Button(root, text='Deposit Money', command=MiscFund.addMoneyMiscFund)
+    def thingsFundGUI():
+        #BUTTON LABEL - THINGS
+        thingsLabel = Label(root, text='Miscellanious Fund: ')
+        thingsLabel.grid(row=2, column=0)
+        #TEXTBOX - THINGS FUND
+        thingsInputBox = Entry(root)
+        thingsInputBox.grid(row=2, column=1)
+        thingsInputBox.insert(0,savedMiscMoney)
+        #WITHDRAW FROM THINGS FUNDS -> OPEN A NEW SCREEN ASKING HOW MUCH TO WITHDRAW
+        withdrawThingsButton = Button(root, text='Withdraw Money', command=MiscFund.withdrawMoneyMiscFund)
+        withdrawThingsButton.grid(row=3, column=0)
 
-depositThingsButton.grid(row=3, column=1)
+        #ADD TO THINGS FUND -> OPEN A NEW SCREEN ASKING HOW MUCH TO ADD
+        depositThingsButton = Button(root, text='Deposit Money', command=MiscFund.addMoneyMiscFund)
 
-
-
-#SHOW HISTORY OF WITHDRAWALS AND DEPOSITS 
-showHistoryButton = Button(root, text='show withdraw/deposit history', command=DataOperations.readTransactionHistory)
-emptyLabel = Label(root, text='     ').grid(row=2, column=3)
-
-showHistoryButton.grid(row=2, column=4)
+        depositThingsButton.grid(row=3, column=1)
 
 
-#CREATE NEW FUND BUTTON
-createFundButton = Button(text='Create a new fund')
-createFundButton.grid(row=2, column=5)
-#DELETE FUND BUTTON
+    def optionsGUI():
+        #SHOW HISTORY OF WITHDRAWALS AND DEPOSITS 
+        showHistoryButton = Button(root, text='show withdraw/deposit history', command=DataOperations.readTransactionHistory)
+        emptyLabel = Label(root, text='     ').grid(row=2, column=3)
+
+        showHistoryButton.grid(row=2, column=4)
+        def createFundWindow():
+            createFundWindow = Toplevel()
+            createFundWindow.geometry('400x500')
+
+            createFundNameLabel = Label(createFundWindow,text='Fund name: ')
+            createFundNameLabel.pack()
+            createFundNameInputField = Entry(createFundWindow)
+            createFundNameInputField.pack()
+            createFundButon = Button(createFundWindow, text='Create new fund')
+            createFundButon.pack()
+
+        #CREATE NEW FUND BUTTON
+        createFundButton = Button(text='Create a new fund', command=createFundWindow)
+        createFundButton.grid(row=2, column=5)
+        #DELETE FUND BUTTON
+
+
+GUI.emFundGUI()
+GUI.thingsFundGUI()
+GUI.optionsGUI()
 
 
 root.mainloop()
