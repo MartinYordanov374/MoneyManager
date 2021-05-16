@@ -1,9 +1,20 @@
 from tkinter import *
 import json 
+import mysql.connector
+from dotenv import load_dotenv
+import os
 root=Tk()
 
 root.title('MoneyManager')
 root.geometry("800x600")
+
+load_dotenv()
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password=os.getenv('PASSWORD'),
+  database="Mmanager"
+)
 
 class EmFund():
     def addMoneyEmFund():
@@ -14,7 +25,8 @@ class EmFund():
         addMoneyPromptMessage.grid(row=0, column=0)
         addMoneyField= Entry(addScreen)
         addMoneyField.grid(row=1, column=0, ipadx=130)
-        finishAddingButton = Button(addScreen, text='Deposit money to your emergency fund',width=50, command=lambda: EmFund.confirmAddingEmFundMoney(addMoneyField.get())).grid(row=2,column=0)
+        finishAddingButton = Button(addScreen, text='Deposit money to your emergency fund',width=50, 
+        command=lambda: EmFund.confirmAddingEmFundMoney(addMoneyField.get())).grid(row=2,column=0)
     
     def confirmAddingEmFundMoney(amount):
         if(len(amount)>0):
@@ -23,6 +35,11 @@ class EmFund():
             emFundBox.delete(0,END)
             emFundBox.insert(0,currAmount+formerAmount)
             saveData()
+            queryCursor = mydb.cursor()
+            queryOne ='INSERT INTO TransactionHistory (type, amount) VALUES (%s, %s)'
+            val=('deposit', amount)
+            queryCursor.execute(queryOne,val)
+            mydb.commit()
 
         else:
             errorScreen = Toplevel()
@@ -40,7 +57,8 @@ class EmFund():
         withdrawInputField = Entry(withdrawScreen)
         withdrawInputField.grid(row=1, column =0, ipadx=130)
         #withdraw input button -> How much would you like to withdraw?
-        withdrawButton = Button(withdrawScreen,text='Withdraw money from your emergency fund', width=50, command=lambda: EmFund.confirmWithdrawEmFundMoney(withdrawInputField.get()))
+        withdrawButton = Button(withdrawScreen,text='Withdraw money from your emergency fund', width=50, 
+        command=lambda: EmFund.confirmWithdrawEmFundMoney(withdrawInputField.get()))
         withdrawButton.grid(row=2, column=0)
 
     def confirmWithdrawEmFundMoney(amount):
@@ -50,6 +68,12 @@ class EmFund():
                 emFundBox.delete(0,END)
                 emFundBox.insert(0,currentEmFundMoney-moneyToWithdraw)
                 saveData()
+                queryCursor = mydb.cursor()
+                queryOne ='INSERT INTO TransactionHistory (type, amount) VALUES (%s, %s)'
+                val=('withdraw', amount)
+                queryCursor.execute(queryOne,val)
+                mydb.commit()
+
             else:
                 errorScreen = Toplevel()
                 errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')
@@ -73,6 +97,11 @@ class MiscFund():
             thingsInputBox.delete(0,END)
             thingsInputBox.insert(0,currAmount+formerAmount)
             saveData()
+            queryCursor = mydb.cursor()
+            queryOne ='INSERT INTO TransactionHistory (type, amount) VALUES (%s, %s)'
+            val=('deposit', amount)
+            queryCursor.execute(queryOne,val)
+            mydb.commit()
 
         else:
             errorScreen = Toplevel()
@@ -100,17 +129,18 @@ class MiscFund():
             thingsInputBox.delete(0,END)
             thingsInputBox.insert(0,currentThingsFundMoney-moneyToWithdraw)
             saveData()
+            queryCursor = mydb.cursor()
+            queryOne ='INSERT INTO TransactionHistory (type, amount) VALUES (%s, %s)'
+            val=('withdraw', amount)
+            queryCursor.execute(queryOne,val)
+            mydb.commit()
 
         else:
             errorScreen = Toplevel()
             errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')
             errorMessage.pack()
 
-class history():
-    def showHistory():
-        historyScreen=Toplevel()
-        historyScreen.title('Withdraw/Deposit history')
-        historyScreen.geometry('500x500')
+
 emergencyFundLabel = Label(root, text='Emergency Fund:').grid(row=0, column=0)
 
 #TEXTBOX - EMERGENCY FUND
@@ -136,6 +166,24 @@ def readData():
     savedEmFundMoney = savedMoney[0]
     savedMiscMoney = savedMoney[1]
 
+
+def readTransactionHistory():
+    transactionHistoryScreen = Toplevel()
+    transactionHistoryScreen.geometry('460x550')
+    transactionHistoryTextBox = Listbox(transactionHistoryScreen, width=100, height=100)
+    transactionHistoryTextBox.pack()
+    
+    
+    # historyData_file = open('historyData.json')
+    # loadedHistoryData = json.load(historyData_file)
+    # historyDataPairs = loadedHistoryData.items()
+    # global historyActionType, historyAmount
+    # for key, value in historyDataPairs:
+    #     historyActionType=key
+    #     historyAmount=value
+
+    
+    # transactionHistoryTextBox.insert(0,historyActionType)
 
 readData()
 
@@ -172,7 +220,7 @@ depositThingsButton.grid(row=3, column=1)
 #DELETE FUND BUTTON
 
 #SHOW HISTORY OF WITHDRAWALS AND DEPOSITS 
-showHistoryButton = Button(root, text='show withdraw/deposit history', command=history.showHistory)
+showHistoryButton = Button(root, text='show withdraw/deposit history', command=readTransactionHistory)
 emptyLabel = Label(root, text='     ').grid(row=2, column=3)
 
 showHistoryButton.grid(row=2, column=4)
