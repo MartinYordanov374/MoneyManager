@@ -173,7 +173,13 @@ def readTransactionHistory():
     transactionHistoryTextBox = Listbox(transactionHistoryScreen, width=100, height=100)
     transactionHistoryTextBox.pack()
     
-    
+    queryCursor = mydb.cursor()
+    sqlCommand ='SELECT type,amount FROM TransactionHistory'
+    queryCursor.execute(sqlCommand)
+    result = queryCursor.fetchall()
+    mydb.commit()
+    for i in result:
+        transactionHistoryTextBox.insert(END,"--", i)
     # historyData_file = open('historyData.json')
     # loadedHistoryData = json.load(historyData_file)
     # historyDataPairs = loadedHistoryData.items()
