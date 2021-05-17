@@ -8,7 +8,7 @@ import os
 root=Tk()
 
 root.title('MoneyManager')
-root.geometry("800x600")
+root.geometry("850x600")
 
 load_dotenv()
 mydb = mysql.connector.connect(
@@ -231,6 +231,9 @@ class GUI():
         emptyLabel = Label(root, text='     ').grid(row=2, column=3)
 
         showHistoryButton.grid(row=2, column=4)
+
+        fundsAttributes=[]
+
         def createFundWindow():
             
             createFundWindow = Toplevel()
@@ -242,25 +245,60 @@ class GUI():
             createFundNameInputField.pack()
             createFundButon = Button(createFundWindow, text='Create new fund', command =lambda: createNewFund(createFundNameInputField.get()))
             createFundButon.pack()
-
+            
 
         def createNewFund(name):
-            global rowCounter
+            global rowCounter, withdrawNewFundButton,depositNewFundButton,newFundEntry
             rowCounter+=1
-            newFundLabel = Label(text=name+' Fund: ')
+            newFundLabel = Label(text=name+' Fund: ', name=name+'Label')
             newFundLabel.grid(row=rowCounter, column=colCounter)
-            newFundEntry = Entry(root)
+            newFundEntry = Entry(root, name='entry'+name+'Fund')
             newFundEntry.grid(row=rowCounter, column=colCounter+1)
             newFundEntry.insert(0,0)
-            withdrawNewFundButton = Button(text='Withdraw Money')
+            withdrawNewFundButton = Button(text='Withdraw Money', name='withdrawButton'+name+'Fund')
             withdrawNewFundButton.grid(row=rowCounter+1, column=0)
-            depositNewFundButton = Button(text='Deposit Money')
+            depositNewFundButton = Button(text='Deposit Money', name='depositButton'+name+'Fund')
             depositNewFundButton.grid(row=rowCounter+1, column=1)
+            fundsAttributes.append(newFundLabel)
+            fundsAttributes.append(newFundEntry)
+            fundsAttributes.append(withdrawNewFundButton)
+            fundsAttributes.append(depositNewFundButton)
+        def deleteFund(name):
+            print('Deleted fund '+name)
+            nameLabel = '.'+name+'Label'
+            entryName = '.'+'entry'+name+'Fund'
+            withdrawButtonName = '.'+'withdrawButton'+name+'Fund'
+            depositButtonName = '.'+'depositButton'+name+'Fund'
+            for i in fundsAttributes:
+                
+                if(str(i)==str(nameLabel)):
+                    i.destroy()
+                if(str(i)==str(entryName)):
+                    i.destroy()
+                if(str(i)==str(withdrawButtonName)):
+                    i.destroy()
+                if(str(i)==str(depositButtonName)):
+                    i.destroy()
+
+        def deleteFundWindow():
+            deleteFundWindow = Toplevel()
+            deleteFundWindow.geometry('400x500')
+
+            deleteFundNameLabel = Label(deleteFundWindow,text='Fund name: ')
+            deleteFundNameLabel.pack()
+            deleteFundNameInputField = Entry(deleteFundWindow)
+            deleteFundNameInputField.pack()
+            deleteFundButon = Button(deleteFundWindow, text='Delete fund', command =lambda: deleteFund(deleteFundNameInputField.get()))
+            deleteFundButon.pack()
+
+
         #CREATE NEW FUND BUTTON
         createFundButton = Button(text='Create a new fund', command=createFundWindow)
         createFundButton.grid(row=2, column=5)
-        #DELETE FUND BUTTON
 
+        #DELETE FUND BUTTON
+        deleteFundButton = Button(text='Delete a fund', command=deleteFundWindow)
+        deleteFundButton.grid(row=2, column=6)
 
 GUI.emFundGUI()
 GUI.thingsFundGUI()
