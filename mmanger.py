@@ -34,10 +34,10 @@ class EmFund():
     def confirmAddingEmFundMoney(amount):
         if(len(amount)>0):
             currAmount = int(amount)
-            formerAmount = int(emFundBox.get())
-            emFundBox.delete(0,END)
-            emFundBox.insert(0,currAmount+formerAmount)
-            saveData()
+            formerAmount = int(GUI.emFundBox.get())
+            GUI.emFundBox.delete(0,END)
+            GUI.emFundBox.insert(0,currAmount+formerAmount)
+            DataOperations.saveData()
             queryCursor = mydb.cursor()
             queryOne ='INSERT INTO TransactionHistory (type, amount) VALUES (%s, %s)'
             val=('deposit', amount)
@@ -65,12 +65,12 @@ class EmFund():
         withdrawButton.grid(row=2, column=0)
 
     def confirmWithdrawEmFundMoney(amount):
-            currentEmFundMoney = int(emFundBox.get())
+            currentEmFundMoney = int(GUI.emFundBox.get())
             moneyToWithdraw = int(amount)
             if(len(amount)>=0 and moneyToWithdraw<=currentEmFundMoney):
-                emFundBox.delete(0,END)
-                emFundBox.insert(0,currentEmFundMoney-moneyToWithdraw)
-                saveData()
+                GUI.emFundBox.delete(0,END)
+                GUI.emFundBox.insert(0,currentEmFundMoney-moneyToWithdraw)
+                DataOperations.saveData()
                 queryCursor = mydb.cursor()
                 queryOne ='INSERT INTO TransactionHistory (type, amount) VALUES (%s, %s)'
                 val=('withdraw', amount)
@@ -96,10 +96,10 @@ class MiscFund():
     def confirmAddingMiscFundMoney(amount):
         if(len(amount)>0):
             currAmount = int(amount)
-            formerAmount = int(thingsInputBox.get())
-            thingsInputBox.delete(0,END)
-            thingsInputBox.insert(0,currAmount+formerAmount)
-            saveData()
+            formerAmount = int(GUI.thingsInputBox.get())
+            GUI.thingsInputBox.delete(0,END)
+            GUI.thingsInputBox.insert(0,currAmount+formerAmount)
+            DataOperations.saveData()
             queryCursor = mydb.cursor()
             queryOne ='INSERT INTO TransactionHistory (type, amount) VALUES (%s, %s)'
             val=('deposit', amount)
@@ -126,12 +126,12 @@ class MiscFund():
         withdrawButton.grid(row=2, column=0)
 
     def confirmWithdrawMiscFundMoney(amount):
-        currentThingsFundMoney = int(thingsInputBox.get())
+        currentThingsFundMoney = int(GUI.thingsInputBox.get())
         moneyToWithdraw = int(amount)
         if(len(amount)>=0 and moneyToWithdraw<=currentThingsFundMoney):
-            thingsInputBox.delete(0,END)
-            thingsInputBox.insert(0,currentThingsFundMoney-moneyToWithdraw)
-            saveData()
+            GUI.thingsInputBox.delete(0,END)
+            GUI.thingsInputBox.insert(0,currentThingsFundMoney-moneyToWithdraw)
+            DataOperations.saveData()
             queryCursor = mydb.cursor()
             queryOne ='INSERT INTO TransactionHistory (type, amount) VALUES (%s, %s)'
             val=('withdraw', amount)
@@ -146,8 +146,8 @@ class MiscFund():
 class DataOperations():
     def saveData():
         data={
-        'EmFund': emFundBox.get(),
-        'MiscFund': thingsInputBox.get()
+        'EmFund': GUI.emFundBox.get(),
+        'MiscFund': GUI.thingsInputBox.get()
         }
         data_file = open('fundsData.json','w')
         json.dump(data, data_file, indent=6)
@@ -190,37 +190,37 @@ DataOperations.readData()
 
 class GUI():
     def emFundGUI():
-        emergencyFundLabel = Label(root, text='Emergency Fund:').grid(row=0, column=0)
+        GUI.emergencyFundLabel = Label(root, text='Emergency Fund:').grid(row=0, column=0)
 
         #TEXTBOX - EMERGENCY FUND
-        emFundBox = Entry(root, state='normal')
-        emFundBox.grid(row=0, column=1)
-        emFundBox.insert(0,savedEmFundMoney)
+        GUI.emFundBox = Entry(root, state='normal')
+        GUI.emFundBox.grid(row=0, column=1)
+        GUI.emFundBox.insert(0,savedEmFundMoney)
 
         #WITHDRAW FROM EMERGENCY FUND -> OPEN A NEW SCREEN ASKING HOW MUCH TO WITHDRAW
 
-        emFundWithdrawButton = Button(root, text='Withdraw money', command=EmFund.withdrawMoneyEmFund).grid(row=1, column=0)
+        GUI.emFundWithdrawButton = Button(root, text='Withdraw money', command=EmFund.withdrawMoneyEmFund).grid(row=1, column=0)
 
         #ADD TO EMERGENCY FUND -> OPEN A NEW SCREEN ASKING HOW MUCH TO ADD
 
-        emFundAddButton = Button(root, text='Deposit money', command=EmFund.addMoneyEmFund).grid(row=1, column=1)
+        GUI.emFundAddButton = Button(root, text='Deposit money', command=EmFund.addMoneyEmFund).grid(row=1, column=1)
 
     def thingsFundGUI():
         #BUTTON LABEL - THINGS
-        thingsLabel = Label(root, text='Miscellanious Fund: ')
-        thingsLabel.grid(row=2, column=0)
+        GUI.thingsLabel = Label(root, text='Miscellanious Fund: ')
+        GUI.thingsLabel.grid(row=2, column=0)
         #TEXTBOX - THINGS FUND
-        thingsInputBox = Entry(root)
-        thingsInputBox.grid(row=2, column=1)
-        thingsInputBox.insert(0,savedMiscMoney)
+        GUI.thingsInputBox = Entry(root)
+        GUI.thingsInputBox.grid(row=2, column=1)
+        GUI.thingsInputBox.insert(0,savedMiscMoney)
         #WITHDRAW FROM THINGS FUNDS -> OPEN A NEW SCREEN ASKING HOW MUCH TO WITHDRAW
-        withdrawThingsButton = Button(root, text='Withdraw Money', command=MiscFund.withdrawMoneyMiscFund)
-        withdrawThingsButton.grid(row=3, column=0)
+        GUI.withdrawThingsButton = Button(root, text='Withdraw Money', command=MiscFund.withdrawMoneyMiscFund)
+        GUI.withdrawThingsButton.grid(row=3, column=0)
 
         #ADD TO THINGS FUND -> OPEN A NEW SCREEN ASKING HOW MUCH TO ADD
-        depositThingsButton = Button(root, text='Deposit Money', command=MiscFund.addMoneyMiscFund)
+        GUI.depositThingsButton = Button(root, text='Deposit Money', command=MiscFund.addMoneyMiscFund)
 
-        depositThingsButton.grid(row=3, column=1)
+        GUI.depositThingsButton.grid(row=3, column=1)
 
     def optionsGUI():
         global rowCounter, colCounter
