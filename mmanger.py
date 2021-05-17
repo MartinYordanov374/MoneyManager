@@ -1,5 +1,6 @@
 from tkinter import *
-import json 
+import json
+from dotenv.main import find_dotenv 
 import mysql.connector
 from dotenv import load_dotenv
 import os
@@ -221,7 +222,6 @@ class GUI():
 
         depositThingsButton.grid(row=3, column=1)
 
-
     def optionsGUI():
         global rowCounter, colCounter
         rowCounter = 5
@@ -248,23 +248,31 @@ class GUI():
             
 
         def createNewFund(name):
-            global rowCounter, withdrawNewFundButton,depositNewFundButton,newFundEntry
+            global rowCounter, colCounter, withdrawNewFundButton,depositNewFundButton,newFundEntry
             rowCounter+=1
-            newFundLabel = Label(text=name+' Fund: ', name=name+'Label')
-            newFundLabel.grid(row=rowCounter, column=colCounter)
+            newFundLabel = Label(root,text=name+' Fund: ', name=name+'Label')
+            newFundLabel.grid(row=rowCounter, column=0)
             newFundEntry = Entry(root, name='entry'+name+'Fund')
-            newFundEntry.grid(row=rowCounter, column=colCounter+1)
+            newFundEntry.grid(row=rowCounter, column=1)
             newFundEntry.insert(0,0)
-            withdrawNewFundButton = Button(text='Withdraw Money', name='withdrawButton'+name+'Fund')
+            withdrawNewFundButton = Button(root, text='Withdraw Money', name='withdrawButton'+name+'Fund')
             withdrawNewFundButton.grid(row=rowCounter+1, column=0)
-            depositNewFundButton = Button(text='Deposit Money', name='depositButton'+name+'Fund')
+            depositNewFundButton = Button(root, text='Deposit Money', name='depositButton'+name+'Fund')
             depositNewFundButton.grid(row=rowCounter+1, column=1)
+            entryLabel=Label(root, text='       ')
+            entryLabel.grid(row=rowCounter+2, column = 0)
             fundsAttributes.append(newFundLabel)
             fundsAttributes.append(newFundEntry)
             fundsAttributes.append(withdrawNewFundButton)
             fundsAttributes.append(depositNewFundButton)
+
+            fundData = {
+                str(name)+'Fund':0
+            }
+            jsonFileFundHolder =open(name+'Fund.json', 'w+')
+            json.dump(fundData, jsonFileFundHolder, indent=6)
+
         def deleteFund(name):
-            print('Deleted fund '+name)
             nameLabel = '.'+name+'Label'
             entryName = '.'+'entry'+name+'Fund'
             withdrawButtonName = '.'+'withdrawButton'+name+'Fund'
