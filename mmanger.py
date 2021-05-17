@@ -223,12 +223,16 @@ class GUI():
 
 
     def optionsGUI():
+        global rowCounter, colCounter
+        rowCounter = 5
+        colCounter = 0
         #SHOW HISTORY OF WITHDRAWALS AND DEPOSITS 
         showHistoryButton = Button(root, text='show withdraw/deposit history', command=DataOperations.readTransactionHistory)
         emptyLabel = Label(root, text='     ').grid(row=2, column=3)
 
         showHistoryButton.grid(row=2, column=4)
         def createFundWindow():
+            
             createFundWindow = Toplevel()
             createFundWindow.geometry('400x500')
 
@@ -236,9 +240,22 @@ class GUI():
             createFundNameLabel.pack()
             createFundNameInputField = Entry(createFundWindow)
             createFundNameInputField.pack()
-            createFundButon = Button(createFundWindow, text='Create new fund')
+            createFundButon = Button(createFundWindow, text='Create new fund', command =lambda: createNewFund(createFundNameInputField.get()))
             createFundButon.pack()
 
+
+        def createNewFund(name):
+            global rowCounter
+            rowCounter+=1
+            newFundLabel = Label(text=name+' Fund: ')
+            newFundLabel.grid(row=rowCounter, column=colCounter)
+            newFundEntry = Entry(root)
+            newFundEntry.grid(row=rowCounter, column=colCounter+1)
+            newFundEntry.insert(0,0)
+            withdrawNewFundButton = Button(text='Withdraw Money')
+            withdrawNewFundButton.grid(row=rowCounter+1, column=0)
+            depositNewFundButton = Button(text='Deposit Money')
+            depositNewFundButton.grid(row=rowCounter+1, column=1)
         #CREATE NEW FUND BUTTON
         createFundButton = Button(text='Create a new fund', command=createFundWindow)
         createFundButton.grid(row=2, column=5)
