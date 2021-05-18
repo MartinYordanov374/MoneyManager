@@ -311,11 +311,25 @@ class GUI():
             pass
 
         def depositNewFund(name):
+            global newFundMoneyField
+            GUI.newFundAddScreen = Toplevel()
+            GUI.newFundAddScreen.title('Deposit Money - '+name+' Fund')
+            GUI.newFundAddScreen.geometry("475x500")
+            addMoneyPromptMessage = Label(GUI.newFundAddScreen,text='How much money would you like to deposit to your'+name+' Fund?')
+            addMoneyPromptMessage.grid(row=0, column=0)
+            GUI.newFundMoneyField= Entry(GUI.newFundAddScreen)
+            GUI.newFundMoneyField.grid(row=1, column=0, ipadx=130)
+            finishAddingButton = Button(GUI.newFundAddScreen, text='Deposit money to your'+name+' fund',width=50, command=lambda: confirmDepositNewFund(name,GUI.newFundMoneyField.get())).grid(row=2,column=0)
+
+        def confirmDepositNewFund(name, amount):
             fundData = {
-                str(name)+'Fund': GUI.newFundEntry.get()
+                str(name)+'Fund': amount
             }
             data_file = open(name+'Fund.json','w')
             json.dump(fundData, data_file, indent=6)
+            GUI.newFundEntry.delete(0,END)
+
+            GUI.newFundEntry.insert(0,amount)
 
         #CREATE NEW FUND BUTTON
         createFundButton = Button(text='Create a new fund', command=createFundWindow)
