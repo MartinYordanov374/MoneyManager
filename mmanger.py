@@ -250,21 +250,21 @@ class GUI():
         def createNewFund(name):
             global rowCounter, colCounter, withdrawNewFundButton,depositNewFundButton,newFundEntry
             rowCounter+=1
-            newFundLabel = Label(root,text=name+' Fund: ', name=name+'Label')
-            newFundLabel.grid(row=rowCounter, column=0)
-            newFundEntry = Entry(root, name='entry'+name+'Fund')
-            newFundEntry.grid(row=rowCounter, column=1)
-            newFundEntry.insert(0,0)
-            withdrawNewFundButton = Button(root, text='Withdraw Money', name='withdrawButton'+name+'Fund')
-            withdrawNewFundButton.grid(row=rowCounter+1, column=0)
-            depositNewFundButton = Button(root, text='Deposit Money', name='depositButton'+name+'Fund')
-            depositNewFundButton.grid(row=rowCounter+1, column=1)
-            entryLabel=Label(root, text='       ')
-            entryLabel.grid(row=rowCounter+2, column = 0)
-            fundsAttributes.append(newFundLabel)
-            fundsAttributes.append(newFundEntry)
-            fundsAttributes.append(withdrawNewFundButton)
-            fundsAttributes.append(depositNewFundButton)
+            GUI.newFundLabel = Label(root,text=name+' Fund: ', name=name+'Label')
+            GUI.newFundLabel.grid(row=rowCounter, column=0)
+            GUI.newFundEntry = Entry(root, name='entry'+name+'Fund')
+            GUI.newFundEntry.grid(row=rowCounter, column=1)
+            GUI.newFundEntry.insert(0,0)
+            GUI.withdrawNewFundButton = Button(root, text='Withdraw Money', name='withdrawButton'+name+'Fund', command=lambda: withdrawNewFund(name))
+            GUI.withdrawNewFundButton.grid(row=rowCounter+1, column=0)
+            GUI.depositNewFundButton = Button(root, text='Deposit Money', name='depositButton'+name+'Fund',command=lambda: depositNewFund(name))
+            GUI.depositNewFundButton.grid(row=rowCounter+1, column=1)
+            GUI.entryLabel=Label(root, text='       ')
+            GUI.entryLabel.grid(row=rowCounter+2, column = 0)
+            fundsAttributes.append(GUI.newFundLabel)
+            fundsAttributes.append(GUI.newFundEntry)
+            fundsAttributes.append(GUI.withdrawNewFundButton)
+            fundsAttributes.append(GUI.depositNewFundButton)
 
             fundData = {
                 str(name)+'Fund':0
@@ -299,6 +299,23 @@ class GUI():
             deleteFundButon = Button(deleteFundWindow, text='Delete fund', command =lambda: deleteFund(deleteFundNameInputField.get()))
             deleteFundButon.pack()
 
+        def manageNewFund(name):
+            savedMoney=[]
+            data_file=open(name+'Fund.json')
+            loaded_data = json.load(data_file)
+            pairs = loaded_data.items()
+            for key,value in pairs:
+                print(value)
+
+        def withdrawNewFund(name):
+            pass
+
+        def depositNewFund(name):
+            fundData = {
+                str(name)+'Fund': GUI.newFundEntry.get()
+            }
+            data_file = open(name+'Fund.json','w')
+            json.dump(fundData, data_file, indent=6)
 
         #CREATE NEW FUND BUTTON
         createFundButton = Button(text='Create a new fund', command=createFundWindow)
