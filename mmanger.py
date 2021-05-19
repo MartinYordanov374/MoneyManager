@@ -126,11 +126,11 @@ class MiscFund():
         withdrawButton.grid(row=2, column=0)
 
     def confirmWithdrawMiscFundMoney(amount):
-        currentThingsFundMoney = int(GUI.thingsInputBox.get())
+        currentFundMoney = int(GUI.thingsInputBox.get())
         moneyToWithdraw = int(amount)
-        if(len(amount)>=0 and moneyToWithdraw<=currentThingsFundMoney):
+        if(len(amount)>=0 and moneyToWithdraw<=currentFundMoney):
             GUI.thingsInputBox.delete(0,END)
-            GUI.thingsInputBox.insert(0,currentThingsFundMoney-moneyToWithdraw)
+            GUI.thingsInputBox.insert(0,currentFundMoney-moneyToWithdraw)
             DataOperations.saveData()
             queryCursor = mydb.cursor()
             queryOne ='INSERT INTO TransactionHistory (type, amount) VALUES (%s, %s)'
@@ -308,7 +308,36 @@ class GUI():
                 print(value)
 
         def withdrawNewFund(name):
-            pass
+            global newFundWithdrawMoneyField
+            GUI.newFundWithdrawScreen = Toplevel()
+            GUI.newFundWithdrawScreen.title('Withdraw Money - '+name+' Fund')
+            GUI.newFundWithdrawScreen.geometry("475x500")
+            withdrawMoneyPromptMessage = Label(GUI.newFundWithdrawScreen,text='How much money would you like to withdraw from your'+name+' Fund?')
+            withdrawMoneyPromptMessage.grid(row=0, column=0)
+            GUI.newFundWithdrawMoneyField= Entry(GUI.newFundWithdrawScreen)
+            GUI.newFundWithdrawMoneyField.grid(row=1, column=0, ipadx=130)
+            finishAddingButton = Button(GUI.newFundWithdrawScreen, text='Withdraw money from your '+name+' fund',width=50, command=lambda: confirmWithdrawNewFund(name,GUI.newFundWithdrawMoneyField.get())).grid(row=2,column=0)
+
+       
+        def confirmWithdrawNewFund(name, amount):
+           
+            currentFundMoney = int(GUI.newFundEntry.get())
+            moneyToWithdraw = int(amount)
+            print(currentFundMoney, '->', moneyToWithdraw)
+            if(len(amount)>=0 and moneyToWithdraw<=currentFundMoney):
+                fundData = {
+                    str(name)+'Fund': currentFundMoney-moneyToWithdraw
+                }
+                data_file = open(name+'Fund.json','w')
+                json.dump(fundData, data_file, indent=6)
+
+                GUI.newFundEntry.delete(0,END)
+
+                GUI.newFundEntry.insert(0,currentFundMoney-moneyToWithdraw)
+            else:
+                errorScreen = Toplevel()
+                errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')
+                errorMessage.pack()
 
         def depositNewFund(name):
             global newFundMoneyField
@@ -330,6 +359,7 @@ class GUI():
             GUI.newFundEntry.delete(0,END)
 
             GUI.newFundEntry.insert(0,amount)
+            
 
         #CREATE NEW FUND BUTTON
         createFundButton = Button(text='Create a new fund', command=createFundWindow)
