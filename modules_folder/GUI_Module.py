@@ -74,31 +74,8 @@ class GUI():
         def createNewFund(name):
             global rowCounter, colCounter, withdrawNewFundButton,depositNewFundButton,newFundEntry
             rowCounter+=1
-            GUI.newFundLabel = Label(root,text=name+' Fund: ', name=name+'Label')
-            GUI.newFundLabel.grid(row=rowCounter, column=0)
-            GUI.newFundEntry = Entry(root, name='entry'+name+'Fund')
-            GUI.newFundEntry.grid(row=rowCounter, column=1)
-            GUI.newFundEntry.insert(0,0)
-            GUI.withdrawNewFundButton = Button(root, text='Withdraw Money', name='withdrawButton'+name+'Fund', command=lambda: withdrawNewFund(name))
-            GUI.withdrawNewFundButton.grid(row=rowCounter+1, column=0)
-            GUI.depositNewFundButton = Button(root, text='Deposit Money', name='depositButton'+name+'Fund',command=lambda: depositNewFund(name))
-            GUI.depositNewFundButton.grid(row=rowCounter+1, column=1)
-            GUI.entryLabel=Label(root, text='       ')
-            GUI.entryLabel.grid(row=rowCounter+2, column = 0)
-            fundsAttributes.append(GUI.newFundLabel)
-            fundsAttributes.append(GUI.newFundEntry)
-            fundsAttributes.append(GUI.withdrawNewFundButton)
-            fundsAttributes.append(GUI.depositNewFundButton)
 
-            fundData = {
-                str(name)+'Fund':0
-            }
-            jsonFileFundHolder =open(name+'Fund.json', 'w+')
-            json.dump(fundData, jsonFileFundHolder, indent=6)
-
-            todayDate = date.today()
-            
-           
+            todayDate = date.today()  
             queryCursor = mydb.cursor()
             queryTwo = 'SELECT COUNT(*) FROM FundsArchive WHERE fundname=%s'
             valueCheck = (name,)
@@ -110,8 +87,33 @@ class GUI():
                 val=(name, str(todayDate))
                 queryCursor.execute(queryOne,val)
                 mydb.commit()
+                GUI.newFundLabel = Label(root,text=name+' Fund: ', name=name+'Label')
+                GUI.newFundLabel.grid(row=rowCounter, column=0)
+                GUI.newFundEntry = Entry(root, name='entry'+name+'Fund')
+                GUI.newFundEntry.grid(row=rowCounter, column=1)
+                GUI.newFundEntry.insert(0,0)
+                GUI.withdrawNewFundButton = Button(root, text='Withdraw Money', name='withdrawButton'+name+'Fund', command=lambda: withdrawNewFund(name))
+                GUI.withdrawNewFundButton.grid(row=rowCounter+1, column=0)
+                GUI.depositNewFundButton = Button(root, text='Deposit Money', name='depositButton'+name+'Fund',command=lambda: depositNewFund(name))
+                GUI.depositNewFundButton.grid(row=rowCounter+1, column=1)
+                GUI.entryLabel=Label(root, text='       ')
+                GUI.entryLabel.grid(row=rowCounter+2, column = 0)
+                fundsAttributes.append(GUI.newFundLabel)
+                fundsAttributes.append(GUI.newFundEntry)
+                fundsAttributes.append(GUI.withdrawNewFundButton)
+                fundsAttributes.append(GUI.depositNewFundButton)
+
+                fundData = {
+                    str(name)+'Fund':0
+                }
+                jsonFileFundHolder =open(name+'Fund.json', 'w+')
+                json.dump(fundData, jsonFileFundHolder, indent=6)
             else:
-                pass
+                errorScreen = Toplevel()
+                errorMessage = Label(errorScreen, text='ERROR - FUND ALREADY EXISTS')
+                errorMessage.pack()
+
+           
         def deleteFund(name):
             nameLabel = '.'+name+'Label'
             entryName = '.'+'entry'+name+'Fund'

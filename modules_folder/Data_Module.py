@@ -2,7 +2,7 @@ import json
 import GUI_Module
 from GUI_Module import Toplevel, Listbox, END
 from Database_Module import mydb
-
+from datetime import date 
 class DataOperations():
     def saveData():
         data={
@@ -39,3 +39,5 @@ class DataOperations():
         mydb.commit()
         for i in result:
             transactionHistoryTextBox.insert(END,"--", i)
+    def checkFunds():
+        pass
