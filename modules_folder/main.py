@@ -7,6 +7,9 @@ import GUI_Module
 from GUI_Module import root
 import Data_Module
 
+
+Data_Module.DataOperations.checkFunds()
+
 Data_Module.DataOperations.readData()
 
 

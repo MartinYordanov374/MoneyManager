@@ -40,4 +40,15 @@ class DataOperations():
         for i in result:
             transactionHistoryTextBox.insert(END,"--", i)
     def checkFunds():
-        pass
+        queryCursor = mydb.cursor()
+        checkFundsQuery = 'SELECT * FROM FundsArchive'
+        queryCursor.execute(checkFundsQuery)
+        result = queryCursor.fetchall()
+        mydb.commit()
+        row=4
+        col=0
+
+        for id, fundName, fundDate in result:
+            row+=1
+
+            GUI_Module.GUI.showCustomFund(fundName, row,col)
