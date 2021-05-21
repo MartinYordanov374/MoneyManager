@@ -274,12 +274,20 @@ class GUI():
 
             todayDate = date.today()
             
+           
             queryCursor = mydb.cursor()
-            queryOne ='INSERT INTO FundsArchive (fundname, FundsDate) VALUES (%s,%s)'
-            val=(name, str(todayDate))
-            queryCursor.execute(queryOne,val)
-            mydb.commit()
-
+            queryTwo = 'SELECT COUNT(*) FROM FundsArchive WHERE fundname=%s'
+            valueCheck = (name,)
+            queryCursor.execute(queryTwo,valueCheck)
+            result = queryCursor.fetchall()
+            if(result==[(0,)]):
+                queryCursor = mydb.cursor()
+                queryOne ='INSERT INTO FundsArchive (fundname, FundsDate) VALUES (%s,%s)'
+                val=(name, str(todayDate))
+                queryCursor.execute(queryOne,val)
+                mydb.commit()
+            else:
+                pass
         def deleteFund(name):
             nameLabel = '.'+name+'Label'
             entryName = '.'+'entry'+name+'Fund'
