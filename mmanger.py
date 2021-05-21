@@ -316,14 +316,6 @@ class GUI():
             deleteFundButon = Button(deleteFundWindow, text='Delete fund', command =lambda: deleteFund(deleteFundNameInputField.get()))
             deleteFundButon.pack()
 
-        def manageNewFund(name):
-            savedMoney=[]
-            data_file=open(name+'Fund.json')
-            loaded_data = json.load(data_file)
-            pairs = loaded_data.items()
-            for key,value in pairs:
-                print(value)
-
         def withdrawNewFund(name):
             global newFundWithdrawMoneyField
             GUI.newFundWithdrawScreen = Toplevel()
@@ -389,6 +381,5 @@ class GUI():
 GUI.emFundGUI()
 GUI.thingsFundGUI()
 GUI.optionsGUI()
-
 
 root.mainloop()
