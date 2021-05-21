@@ -287,7 +287,7 @@ class GUI():
                     i.destroy()
                 if(str(i)==str(depositButtonName)):
                     i.destroy()
-
+            os.remove(name+'Fund.json')
         def deleteFundWindow():
             deleteFundWindow = Toplevel()
             deleteFundWindow.geometry('400x500')
