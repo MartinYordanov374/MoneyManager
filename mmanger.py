@@ -4,7 +4,7 @@ from dotenv.main import find_dotenv
 import mysql.connector
 from dotenv import load_dotenv
 import os
-
+from datetime import date
 #Creating the window
 root=Tk()
 
@@ -132,6 +132,7 @@ class MiscFund():
             GUI.thingsInputBox.delete(0,END)
             GUI.thingsInputBox.insert(0,currentFundMoney-moneyToWithdraw)
             DataOperations.saveData()
+
             queryCursor = mydb.cursor()
             queryOne ='INSERT INTO TransactionHistory (type, amount) VALUES (%s, %s)'
             val=('withdraw', amount)
@@ -246,7 +247,6 @@ class GUI():
             createFundButon = Button(createFundWindow, text='Create new fund', command =lambda: createNewFund(createFundNameInputField.get()))
             createFundButon.pack()
             
-
         def createNewFund(name):
             global rowCounter, colCounter, withdrawNewFundButton,depositNewFundButton,newFundEntry
             rowCounter+=1
@@ -272,6 +272,14 @@ class GUI():
             jsonFileFundHolder =open(name+'Fund.json', 'w+')
             json.dump(fundData, jsonFileFundHolder, indent=6)
 
+            todayDate = date.today()
+            
+            queryCursor = mydb.cursor()
+            queryOne ='INSERT INTO FundsArchive (fundname, FundsDate) VALUES (%s,%s)'
+            val=(name, str(todayDate))
+            queryCursor.execute(queryOne,val)
+            mydb.commit()
+
         def deleteFund(name):
             nameLabel = '.'+name+'Label'
             entryName = '.'+'entry'+name+'Fund'
@@ -288,6 +296,7 @@ class GUI():
                 if(str(i)==str(depositButtonName)):
                     i.destroy()
             os.remove(name+'Fund.json')
+
         def deleteFundWindow():
             deleteFundWindow = Toplevel()
             deleteFundWindow.geometry('400x500')
