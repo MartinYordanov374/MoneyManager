@@ -39,6 +39,19 @@ class DataOperations():
         mydb.commit()
         for i in result:
             transactionHistoryTextBox.insert(END,"--", i)
+
+    def readCustomFundData(name):
+        savedMoney=[]
+        fileString=name+'Fund.json'
+        data_file=open('carFund.json',)
+        #loaded_data = json.load(data_file)
+        # pairs = loaded_data.items()
+        # for key,value in loaded_data:
+        #       print(value)
+        # global savedEmFundMoney, savedMiscMoney
+        # savedEmFundMoney = savedMoney[0]
+        # savedMiscMoney = savedMoney[1]
+
     def checkFunds():
         queryCursor = mydb.cursor()
         checkFundsQuery = 'SELECT * FROM FundsArchive'
