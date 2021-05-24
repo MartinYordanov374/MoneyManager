@@ -197,7 +197,7 @@ class GUI():
                 #Get amount before deposit
                 currentMoney = root.nametowidget('entry'+name+'Fund').get()
                 #Amount entered in the deposit window
-                depositedMoney = GUI.newFundMoneyField.get()
+                depositedMoney = amount
                 #Calculate total
                 totalMoney = int(depositedMoney)+int(currentMoney)
                 print(amount,' + ',currentMoney,' = ',totalMoney)
