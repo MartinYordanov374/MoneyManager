@@ -11,12 +11,17 @@ root = Tk()
 
 root.title('MoneyManager')
 root.geometry("1100x700")
+
 class GUI():
+
     global rowCounter, colCounter
+    global fundsAttributes
+    fundsAttributes=[]
     rowCounter = 5
     colCounter = 0
     emFundBox = Entry(root, state='normal')
     emFundBox.grid(row=0, column=1)
+
     def emFundGUI():
         GUI.emergencyFundLabel = Label(root, text='Emergency Fund:').grid(row=0, column=0)
 
@@ -57,7 +62,6 @@ class GUI():
 
         showHistoryButton.grid(row=2, column=4)
 
-        fundsAttributes=[]
 
         def createFundWindow():
             
@@ -92,9 +96,9 @@ class GUI():
                 GUI.newFundEntry = Entry(root, name='entry'+name+'Fund')
                 GUI.newFundEntry.grid(row=rowCounter, column=1)
                 GUI.newFundEntry.insert(0,0)
-                GUI.withdrawNewFundButton = Button(root, text='Withdraw Money', name='withdrawButton'+name+'Fund', command=lambda: withdrawNewFund(name))
+                GUI.withdrawNewFundButton = Button(root, text='Withdraw Money', name='withdrawButton'+name+'Fund', command=lambda: showCustomFund.withdrawNewFund(name))
                 GUI.withdrawNewFundButton.grid(row=rowCounter+1, column=0)
-                GUI.depositNewFundButton = Button(root, text='Deposit Money', name='depositButton'+name+'Fund',command=lambda: depositNewFund(name))
+                GUI.depositNewFundButton = Button(root, text='Deposit Money', name='depositButton'+name+'Fund',command=lambda: showCustomFund.depositNewFund(name))
                 GUI.depositNewFundButton.grid(row=rowCounter+1, column=1)
                 GUI.entryLabel=Label(root, text='       ')
                 GUI.entryLabel.grid(row=rowCounter+2, column = 0)
@@ -108,6 +112,11 @@ class GUI():
                 }
                 jsonFileFundHolder =open(name+'Fund.json', 'w+')
                 json.dump(fundData, jsonFileFundHolder, indent=6)
+                createFundWindow = Toplevel()
+                createFundWindow.geometry('800x50')
+
+                createFundNameLabel = Label(createFundWindow,text='In order for your newly created fund to function properly you may have to restart your application ')
+                createFundNameLabel.pack()
             else:
                 errorScreen = Toplevel()
                 errorMessage = Label(errorScreen, text='ERROR - FUND ALREADY EXISTS')
@@ -119,8 +128,8 @@ class GUI():
             entryName = '.'+'entry'+name+'Fund'
             withdrawButtonName = '.'+'withdrawButton'+name+'Fund'
             depositButtonName = '.'+'depositButton'+name+'Fund'
+
             for i in fundsAttributes:
-                
                 if(str(i)==str(nameLabel)):
                     i.destroy()
                 if(str(i)==str(entryName)):
@@ -129,6 +138,13 @@ class GUI():
                     i.destroy()
                 if(str(i)==str(depositButtonName)):
                     i.destroy()
+            
+            deleteCursor = mydb.cursor()
+            deleteSQL = 'DELETE FROM FundsArchive WHERE fundname=%s'
+            val=(name,)
+            deleteCursor.execute(deleteSQL,val)
+            mydb.commit()
+            
             os.remove(name+'Fund.json')
 
         def deleteFundWindow():
@@ -151,6 +167,7 @@ class GUI():
         deleteFundButton.grid(row=2, column=6)
 
     def showCustomFund(name, rowCountDynamic, colCountDynamic):
+
             def withdrawNewFund(name):
                 global newFundWithdrawMoneyField,rowCounter, colCounter
                 GUI.newFundWithdrawScreen = Toplevel()
@@ -205,7 +222,7 @@ class GUI():
                 root.nametowidget('entry'+name+'Fund').insert(0,totalMoney)
                 saveDataCustom(name,totalMoney)
 
-            fundsAttributes=[]
+
             GUI.newFundLabel = Label(root,text=name+' Fund: ', name=name+'Label')
             GUI.newFundLabel.grid(row=rowCountDynamic+1, column=0)
             GUI.newFundEntry = Entry(root, name='entry'+name+'Fund')
