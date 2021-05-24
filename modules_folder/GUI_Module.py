@@ -194,18 +194,16 @@ class GUI():
                 finishAddingButton = Button(GUI.newFundAddScreen, text='Deposit money to your'+name+' fund',width=50, command=lambda: confirmDepositNewFund(name,GUI.newFundMoneyField.get())).grid(row=2,column=0)
                 
             def confirmDepositNewFund(name, amount):
-                currentMoney = GUI.newFundMoneyField.get()
-                totalMoney = int(amount)+int(currentMoney)
-                fundData = {
-                    str(name)+'Fund': totalMoney
-                }
-                data_file = open(name+'Fund.json','w+')
-                data_file.seek(0)
-                json.dump(fundData, data_file, indent=6)
+                #Get amount before deposit
+                currentMoney = root.nametowidget('entry'+name+'Fund').get()
+                #Amount entered in the deposit window
+                depositedMoney = GUI.newFundMoneyField.get()
+                #Calculate total
+                totalMoney = int(depositedMoney)+int(currentMoney)
+                print(amount,' + ',currentMoney,' = ',totalMoney)
                 root.nametowidget('entry'+name+'Fund').delete(0,END)
-
-                root.nametowidget('entry'+name+'Fund').insert(0,amount)
-                saveDataCustom(name,amount)
+                root.nametowidget('entry'+name+'Fund').insert(0,totalMoney)
+                saveDataCustom(name,totalMoney)
 
             fundsAttributes=[]
             GUI.newFundLabel = Label(root,text=name+' Fund: ', name=name+'Label')
@@ -224,7 +222,7 @@ class GUI():
             def saveDataCustom(name,amount):
                 #Generate the fund JSON data
                 fundData = {
-                    name+"Fund": amount
+                    name+"Fund": int(amount)
 
                 }
                 #Open the json file
@@ -245,7 +243,7 @@ class GUI():
                 root.nametowidget('entry'+name+'Fund').insert(0,savedTotalFundMoney)
                 data_file_custom.close()
                 #Send fund name and amount data to the saveData function
-                saveDataCustom(name,savedTotalFundMoney)
+                # saveDataCustom(name,savedTotalFundMoney)
 
             loadDataCustom(name)
         
