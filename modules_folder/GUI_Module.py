@@ -158,13 +158,13 @@ class GUI():
                 GUI.newFundWithdrawScreen.geometry("475x500")
                 withdrawMoneyPromptMessage = Label(GUI.newFundWithdrawScreen,text='How much money would you like to withdraw from your'+name+' Fund?')
                 withdrawMoneyPromptMessage.grid(row=0, column=0)
-                GUI.newFundWithdrawMoneyField= Entry(GUI.newFundWithdrawScreen)
+                GUI.newFundWithdrawMoneyField= Entry(GUI.newFundWithdrawScreen, name=name+'WithdrawField')
                 GUI.newFundWithdrawMoneyField.grid(row=1, column=0, ipadx=130)
                 finishAddingButton = Button(GUI.newFundWithdrawScreen, text='Withdraw money from your '+name+' fund',width=50, command=lambda: confirmWithdrawNewFund(name,GUI.newFundWithdrawMoneyField.get())).grid(row=2,column=0)
      
             def confirmWithdrawNewFund(name, amount):
             
-                currentFundMoney = int(GUI.newFundEntry.get())
+                currentFundMoney = int(root.nametowidget('entry'+name+'Fund').get())
                 moneyToWithdraw = int(amount)
                 print(currentFundMoney, '->', moneyToWithdraw)
                 if(len(amount)>=0 and moneyToWithdraw<=currentFundMoney):
@@ -174,9 +174,9 @@ class GUI():
                     data_file = open(name+'Fund.json','w')
                     json.dump(fundData, data_file, indent=6)
 
-                    GUI.newFundEntry.delete(0,END)
+                    root.nametowidget('entry'+name+'Fund').delete(0,END)
 
-                    GUI.newFundEntry.insert(0,currentFundMoney-moneyToWithdraw)
+                    root.nametowidget('entry'+name+'Fund').insert(0,currentFundMoney-moneyToWithdraw)
                 else:
                     errorScreen = Toplevel()
                     errorMessage = Label(errorScreen, text='ERROR - INVALID VALUE')

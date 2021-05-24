@@ -42,8 +42,8 @@ class DataOperations():
 
     def readCustomFundData(name):
         savedMoney=[]
-        fileString=name+'Fund.json'
-        data_file=open('carFund.json',)
+        # fileString=name+'Fund.json'
+        # data_file=open(name+'Fund.json',)
         #loaded_data = json.load(data_file)
         # pairs = loaded_data.items()
         # for key,value in loaded_data:
