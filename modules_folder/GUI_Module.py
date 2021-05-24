@@ -194,12 +194,14 @@ class GUI():
                 finishAddingButton = Button(GUI.newFundAddScreen, text='Deposit money to your'+name+' fund',width=50, command=lambda: confirmDepositNewFund(name,GUI.newFundMoneyField.get())).grid(row=2,column=0)
                 
             def confirmDepositNewFund(name, amount):
+                currentMoney = GUI.newFundMoneyField.get()
+                totalMoney = int(amount)+int(currentMoney)
                 fundData = {
-                    str(name)+'Fund': amount
+                    str(name)+'Fund': totalMoney
                 }
-                data_file = open(name+'Fund.json','w')
+                data_file = open(name+'Fund.json','w+')
+                data_file.seek(0)
                 json.dump(fundData, data_file, indent=6)
-                print(root.nametowidget('entry'+name+'Fund').get())
                 root.nametowidget('entry'+name+'Fund').delete(0,END)
 
                 root.nametowidget('entry'+name+'Fund').insert(0,amount)
@@ -223,12 +225,13 @@ class GUI():
                 #Generate the fund JSON data
                 fundData = {
                     name+"Fund": amount
-            
+
                 }
                 #Open the json file
                 jsonFileFundHolder =open(name+'Fund.json', 'w+')
                 #Write to the JSON file
                 json.dump(fundData,jsonFileFundHolder,indent=6)
+                jsonFileFundHolder.close()
             #Load data from json files
             def loadDataCustom(name):
                 savedMoney=[]
@@ -240,6 +243,7 @@ class GUI():
                     savedMoney.append(value)
                 savedTotalFundMoney = savedMoney[0]
                 root.nametowidget('entry'+name+'Fund').insert(0,savedTotalFundMoney)
+                data_file_custom.close()
                 #Send fund name and amount data to the saveData function
                 saveDataCustom(name,savedTotalFundMoney)
 
