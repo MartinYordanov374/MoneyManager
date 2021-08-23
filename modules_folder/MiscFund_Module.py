@@ -20,11 +20,11 @@ class MiscFund():
             GUI_Module.GUI.thingsInputBox.delete(0,END)
             GUI_Module.GUI.thingsInputBox.insert(0,currAmount+formerAmount)
             Data_Module.DataOperations.saveData()
-            queryCursor = mydb.cursor()
-            queryOne ='INSERT INTO TransactionHistory (type, amount) VALUES (%s, %s)'
             val=('deposit', amount)
-            queryCursor.execute(queryOne,val)
+            mydb.execute('INSERT INTO TransactionHistory (type, amount) VALUES (?,?)', val)
+
             mydb.commit()
+            
 
         else:
             errorScreen = Toplevel()
@@ -53,10 +53,8 @@ class MiscFund():
             GUI_Module.GUI.thingsInputBox.insert(0,currentFundMoney-moneyToWithdraw)
             Data_Module.DataOperations.saveData()
 
-            queryCursor = mydb.cursor()
-            queryOne ='INSERT INTO TransactionHistory (type, amount) VALUES (%s, %s)'
             val=('withdraw', amount)
-            queryCursor.execute(queryOne,val)
+            mydb.execute('INSERT INTO TransactionHistory (type, amount) VALUES (?,?)', val)
             mydb.commit()
 
         else:

@@ -80,16 +80,14 @@ class GUI():
             rowCounter+=1
 
             todayDate = date.today()  
-            queryCursor = mydb.cursor()
-            queryTwo = 'SELECT COUNT(*) FROM FundsArchive WHERE fundname=%s'
             valueCheck = (name,)
-            queryCursor.execute(queryTwo,valueCheck)
+            queryCursor = mydb.execute('SELECT COUNT(*) FROM FundsArchive WHERE fundname=(?)',valueCheck)
             result = queryCursor.fetchall()
+            print(result)
             if(result==[(0,)]):
                 queryCursor = mydb.cursor()
-                queryOne ='INSERT INTO FundsArchive (fundname, FundsDate) VALUES (%s,%s)'
                 val=(name, str(todayDate))
-                queryCursor.execute(queryOne,val)
+                mydb.execute('INSERT INTO FundsArchive (fundname, FundsDate) VALUES (?,?)',val)
                 mydb.commit()
                 GUI.newFundLabel = Label(root,text=name+' Fund: ', name=name+'Label')
                 GUI.newFundLabel.grid(row=rowCounter, column=0)
@@ -139,10 +137,8 @@ class GUI():
                 if(str(i)==str(depositButtonName)):
                     i.destroy()
             
-            deleteCursor = mydb.cursor()
-            deleteSQL = 'DELETE FROM FundsArchive WHERE fundname=%s'
             val=(name,)
-            deleteCursor.execute(deleteSQL,val)
+            deleteSQL = mydb.execute('DELETE FROM FundsArchive WHERE fundname=?',val)
             mydb.commit()
             
             os.remove(name+'Fund.json')
