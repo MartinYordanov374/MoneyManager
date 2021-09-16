@@ -15,8 +15,8 @@ class MiscFund():
     
     def confirmAddingMiscFundMoney(amount):
         if(len(amount)>0):
-            currAmount = int(amount)
-            formerAmount = int(GUI_Module.GUI.thingsInputBox.get())
+            currAmount = float(amount)
+            formerAmount = float(GUI_Module.GUI.thingsInputBox.get())
             GUI_Module.GUI.thingsInputBox.delete(0,END)
             GUI_Module.GUI.thingsInputBox.insert(0,currAmount+formerAmount)
             Data_Module.DataOperations.saveData()
@@ -46,8 +46,8 @@ class MiscFund():
         withdrawButton.grid(row=2, column=0)
 
     def confirmWithdrawMiscFundMoney(amount):
-        currentFundMoney = int(GUI_Module.GUI.thingsInputBox.get())
-        moneyToWithdraw = int(amount)
+        currentFundMoney = float(GUI_Module.GUI.thingsInputBox.get())
+        moneyToWithdraw = float(amount)
         if(len(amount)>=0 and moneyToWithdraw<=currentFundMoney):
             GUI_Module.GUI.thingsInputBox.delete(0,END)
             GUI_Module.GUI.thingsInputBox.insert(0,currentFundMoney-moneyToWithdraw)

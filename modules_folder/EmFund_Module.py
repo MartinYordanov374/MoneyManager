@@ -16,8 +16,8 @@ class EmFund():
     
     def confirmAddingEmFundMoney(amount):
         if(len(amount)>0):
-            currAmount = int(amount)
-            formerAmount = int(GUI_Module.GUI.emFundBox.get())
+            currAmount = float(amount)
+            formerAmount = float(GUI_Module.GUI.emFundBox.get())
             GUI_Module.GUI.emFundBox.delete(0,END)
             GUI_Module.GUI.emFundBox.insert(0,currAmount+formerAmount)
             Data_Module.DataOperations.saveData()
@@ -47,8 +47,8 @@ class EmFund():
         withdrawButton.grid(row=2, column=0)
 
     def confirmWithdrawEmFundMoney(amount):
-            currentEmFundMoney = int(GUI_Module.GUI.emFundBox.get())
-            moneyToWithdraw = int(amount)
+            currentEmFundMoney = float(GUI_Module.GUI.emFundBox.get())
+            moneyToWithdraw = float(amount)
             if(len(amount)>=0 and moneyToWithdraw<=currentEmFundMoney):
                 GUI_Module.GUI.emFundBox.delete(0,END)
                 GUI_Module.GUI.emFundBox.insert(0,currentEmFundMoney-moneyToWithdraw)
